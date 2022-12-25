@@ -1,0 +1,56 @@
+判断出栈顺序是否正确
+#include<iostream>
+#include<stack>
+using namespace std;
+
+int main()
+{
+	int size, num, step;
+	cin >> size >> num >> step;
+	for (int i = 1; i <= step; i++)
+	{
+		int record[100];
+		for (int j = 1; j <= num; j++)
+			cin >> record[j];
+
+		//分两流，数字流和记录流
+		int arr1 = 1;
+		int arr2 = 1;
+		int flag = 0;
+		stack<int>line;
+		while (1)
+		{
+			//数字流和记录刘相同
+			if (arr1 == record[arr2])
+			{
+				arr1 += 1;
+				arr2 += 1;
+			}
+			//记录流和栈流相同
+			else if (!line.empty() && record[arr2] == line.top())
+			{
+				line.pop();
+				arr2 += 1;
+			}
+			//否则，数字流入栈
+			else
+			{
+				//若数字流超，break
+				if (arr1 > num)
+					break;
+				line.push(arr1);
+				arr1 += 1;
+				//若栈爆了，break
+				if (line.size() >= size)
+				{
+					flag = 1;
+					break;
+				}
+			}
+		}
+		if (flag == 1 || line.size() > 0)
+			cout << "NO" << '\n';
+		else
+			cout << "YES" << '\n';
+	}
+}
