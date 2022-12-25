@@ -1,0 +1,115 @@
+节点交换
+#include<iostream>
+using namespace std;
+
+class LNote
+{
+public:
+	int data;
+	LNote* next;
+	LNote()
+	{
+		data = -9999; next = NULL;
+	}
+	LNote(int item, LNote* pt)
+	{
+		data = item; next = pt;
+	}
+};
+
+class Llist
+{
+public:
+	int size;
+	LNote* head;
+	Llist()
+	{
+		head = new LNote();
+		size = 0;
+	}
+	~Llist()
+	{
+		LNote* p, * q;
+		p = head->next;
+		while (p != NULL)
+		{
+			q = p; p = p->next;
+			delete q;
+		}
+		size = 0;
+		head->next = NULL;
+	}
+	int LLinsert(int item, int i)
+	{
+		LNote* pa;
+		pa = head;
+		LNote* e = new LNote();
+		e->data = item;
+		for (int k = 0; k < i - 1; k++)
+		{
+			pa = pa->next;
+		}
+		e->next = pa->next;
+		pa->next = e;
+		size++;
+		return 1;
+	}
+	LNote* index(int i)//返回i-1的节点
+	{
+		LNote* pa = head;
+		for (int k = 0; k < i - 1; k++)
+		{
+			pa = pa->next;
+		}
+		return pa;
+	}
+	void LLprint()
+	{
+		LNote* pa = head;
+		for (int k = 1; k <= size; k++)
+		{
+			pa = pa->next;
+			cout << pa->data << " ";
+		}cout << endl;
+	}
+};
+
+//重点--交换
+void swap(LNote* p, LNote* q)
+{
+	LNote* pa;
+	LNote* pb;
+	pa = p->next;
+	p->next = q->next;
+	pb = q->next->next;
+	q->next = pa;
+	p->next->next = pa->next;
+	q->next->next = pb;
+}
+
+int main()
+{
+	int n; cin >> n;
+	Llist L1;
+	for (int k = 1; k <= n; k++)
+	{
+		int temp; cin >> temp;
+		L1.LLinsert(temp, k);
+	}
+	L1.LLprint();
+	for (int g = 0; g < 2; g++)
+	{
+		int a, b; cin >> a >> b;
+		if (a <= 0 || a > L1.size || b <= 0 || b > L1.size)
+		{
+			cout << "error";
+		}
+		else
+		{
+			swap(L1.index(a), L1.index(b));
+			L1.LLprint();
+		}
+	}
+
+	return 0;
+}
