@@ -1,0 +1,113 @@
+表达式求值
+#include<iostream>
+#include<stack>
+using namespace std;
+
+char record1[7] = { '+','-','*','/','(',')','#' };
+char prior[7][7] = {
+	'<','<','<','<','>',' ','>',
+	'<','<','<','<','>',' ','>',
+	'>','>','<','<','>',' ','>',
+	'>','>','<','<','>',' ','>',
+	'>','>','>','>','>',' ','>',
+	'<','<','<','<','=',' ','<',
+	'<','<','<','<','<',' ','=',
+};
+
+//判断是符号还是数字
+bool judge(char oper)
+{
+	if (oper == '+' || oper == '-' || oper == '*' || oper == '/' || oper == '(' || oper == ')' || oper == '#')
+		return true;
+	else
+		return false;
+}
+
+
+//四则运算
+int calculate1(int num1, int num2, char oper)
+{
+	if (oper == '+')
+		return num1 + num2;
+	else if (oper == '-')
+		return num1 - num2;
+	else if (oper == '*')
+		return num1 * num2;
+	else if (oper == '/')
+		return num1 / num2;
+}
+
+//判断大于小于还是等于
+char judge_prior(char op1, char op2)
+{
+	int tar1, tar2;
+	for (int m = 0; m <= 6; m++)
+	{
+		if (record1[m] == op1)
+			tar1 = m;
+		if (record1[m] == op2)
+			tar2 = m;
+	}
+	return prior[tar1][tar2];
+}
+
+//对表达式进行计算，以#开头和结尾
+void calculate2(string arr)
+{
+	stack<int>shu;
+	stack<char>fuhao;
+	fuhao.push('#');
+	int num = 0;
+	bool flag=false;
+	for (int i = 0; i < arr.length(); i++)
+	{
+		//防止记录的只是一个一个的个位数
+		if (!judge(arr[i]))
+		{
+			num = num * 10 + arr[i] - '0';
+			flag = true;
+		}
+		else
+		{
+			if (flag == true)
+			{
+				shu.push(num);
+				num = 0;
+				flag = false;
+			}
+			char choose = judge_prior(arr[i], fuhao.top());
+			if (choose == '>')
+				fuhao.push(arr[i]);
+			else if (choose == '=')
+				fuhao.pop();
+			else if (choose == '<')
+			{
+				//前面的运算若都是需要优先运算的，则优先运算
+				while (choose == '<')
+				{
+					int num1 = shu.top();
+					shu.pop();
+					int num2 = shu.top();
+					shu.pop();
+					char oper = fuhao.top();
+					fuhao.pop();
+					int result = calculate1(num2, num1, oper);
+					shu.push(result);
+					choose = judge_prior(arr[i], fuhao.top());
+				}
+				if (choose == '=')
+					fuhao.pop();
+				else if (choose == '>')
+					fuhao.push(arr[i]);
+			}
+		}
+	}
+	cout << shu.top() << '\n';
+}
+
+int main()
+{
+	string arr;
+	cin >> arr;
+	calculate2(arr);
+}
