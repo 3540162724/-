@@ -1,0 +1,91 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+
+struct node {
+	int x;
+	int y;
+	int next = -1;
+	bool flag;
+};
+
+node mp[100][100];
+int sum;
+stack<node>line;
+
+void findpath()
+{
+	node first;
+	first.x = 1;
+	first.y = 1;
+	first.flag = 1;
+	line.push(first);
+
+	while (!line.empty())
+	{
+		int i, j;
+		if (line.top().x == sum && line.top().y == sum)
+		{
+			//倒着输出路线
+			while (!line.empty())
+			{
+				cout << line.top().x-1 << ' ' << line.top().y-1 << '\n';
+				line.pop();
+			}
+		}
+		else
+		{
+			bool find = false;
+			while (line.top().next < 4 && !find)
+			{
+				//要用自己的next标记，不然会进入死循环
+				line.top().next+=1;
+				switch (line.top().next)
+				{
+				case 0:i = line.top().x; j = line.top().y + 1; break;
+				case 1:i = line.top().x + 1; j = line.top().y; break;
+				case 2:i = line.top().x; j = line.top().y - 1; break;
+				case 3:i = line.top().x - 1; j = line.top().y; break;
+				}
+				//防止越界来不及被循环检测
+				if(line.top().next < 4)
+					if (mp[i][j].flag == 0)
+						find = true;
+			}
+			if (find)
+			{
+				mp[i][j].flag = 1;
+				line.push(mp[i][j]);
+			}
+			else
+			{
+				mp[line.top().x][line.top().y].flag = 0;
+				line.pop();
+			}
+		}
+	}
+}
+
+int main()
+{
+	cin >> sum;
+	for (int i = 0; i <= sum+1; i++)
+	{
+		for (int j = 0; j <= sum+1; j++)
+		{
+			if (i == 0 || i == sum + 1 || j == 0 || j == sum + 1)
+				mp[i][j].flag = 1;
+			else
+				cin >> mp[i][j].flag;
+			mp[i][j].x = i;
+			mp[i][j].y = j;
+		}
+	}
+	for (int i = 0; i <= sum + 1; i++)
+	{
+		for (int j = 0; j <= sum + 1; j++)
+			cout << mp[i][j].flag << ' ';
+		cout << '\n';
+	}
+	findpath();
+}
