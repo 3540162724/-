@@ -1,0 +1,142 @@
+//分配宿舍
+#include<iostream>
+using namespace std;
+
+typedef struct node {
+	string name;
+	int id;
+	node* next;
+}*line,node;
+
+void initline(line& L)
+{
+	L = new node;
+	L->next = NULL;
+}
+
+//原先所有宿舍均没有被使用，构建完整的链2
+void creat_begin_line2(line& L)
+{
+	int begin = 101;
+	line p = L;
+	while (begin <= 120)
+	{
+		line temp = new node;
+		temp->id = begin;
+		temp->next = NULL;
+		p->next = temp;
+		p = p->next;
+		begin += 1;
+	}
+}
+
+//第一次分配
+void init_begin_line1(line& L1,line&L2,string name,int id)
+{
+	line q = L1;
+	line p = L2;
+	while (q->next != NULL)
+		q = q->next;
+	while (p->next->id != id)
+		p = p->next;
+	line tar = p->next;
+	p->next = p->next->next;
+	tar->name = name;
+	tar->next = NULL;
+	q->next = tar;
+}
+
+//再分配
+void assign(line& L1, line& L2, string name)
+{
+	line p = L1;
+	line tar = L2->next;
+	tar->name = name;
+	L2->next = L2->next->next;
+	while (p->next && p->next->id < tar->id)
+		p = p->next;
+	//记得看清楚是连在目标后面的节点
+	tar->next = p->next;
+	p->next = tar;
+}
+
+//返还节点
+void back(line& L1, line& L2, int id)
+{
+	line p = L1;
+	line q = L2;
+	while (q->next != NULL)
+		q = q->next;
+	while (p->next->id != id)
+		p = p->next;
+	line tar = p->next;
+	p->next = p->next->next;
+	tar->next = NULL;
+	q->next = tar;
+}
+
+//打印链1
+void print1(line& L)
+{
+	line p = L->next;
+	while (p)
+	{
+		cout << p->id << ' ' << p->name << '\n';
+		p = p->next;
+	}
+	cout << '\n';
+}
+
+//打印链2
+void print2(line& L)
+{
+	line p = L->next;
+	while (p)
+	{
+		cout << p->id << '\n';
+		p = p->next;
+	}
+	cout << '\n';
+}
+
+
+int main()
+{
+	line L1;
+	line L2;
+	initline(L1);
+	initline(L2);
+	creat_begin_line2(L2);
+	int sum1, sum2;
+	string name;
+	string command;
+	int id;
+	cin >> sum1;
+	while (sum1--)
+	{
+		cin >> name;
+		cin >> id;
+		init_begin_line1(L1, L2, name, id);
+	}
+	print1(L1);
+	print2(L2);
+	cin >> sum2;
+	while (sum2--)
+	{
+		cin >> command;
+		if (command == "assign")
+		{
+			cin >> name;
+			assign(L1, L2, name);
+		}
+		if (command == "return")
+		{
+			cin >> id;
+			back(L1, L2, id);
+		}
+		if (command == "display_used")
+			print1(L1);
+		if (command == "display_free")
+			print2(L2);
+	}
+}
