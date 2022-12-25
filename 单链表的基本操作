@@ -1,0 +1,176 @@
+#include<iostream>
+using namespace std;
+
+typedef struct node {
+	int data;
+	node* next;
+}*list,node;
+
+//初始化链表
+void initlist(list& L)
+{
+	L = new node;
+	L->next = NULL;
+}
+
+//给链表赋入原始数据
+void creatlist(list&L,int elem)
+{
+	list temp = new node;
+	temp->data = elem;
+	list p = L;
+	while (p->next != NULL)
+		p = p->next;
+	p->next = temp;
+	temp->next = NULL;
+}
+
+//在指定位置插入指定元素
+void insert(list& L, int tar, int elem)
+{
+	list temp = new node;
+	temp->data = elem;
+	list p = L->next;
+	int sign = 1;
+	while (sign < tar-1)
+	{
+		sign += 1;
+		p = p->next;
+	}
+	temp->next = p->next;
+	p->next = temp;
+}
+
+//删除指定位置的元素
+void delet(list& L, int tar)
+{
+	list p = L;
+	int sign = 0;
+	while (sign < tar - 1)
+	{
+		sign += 1;
+		p = p->next;
+	}
+	p->next = p->next->next;
+}
+
+void print(list& L)
+{
+	list p = L->next;
+	while (p != NULL)
+	{
+		cout << p->data << ' ';
+		p = p->next;
+	}
+	cout << '\n';
+}
+
+//将两个递增序列合并
+void combine(list L1, list L2)
+{
+	list i = L1->next;
+	list j = L2->next;
+	list k = L1;
+	while (i != NULL && j != NULL)
+	{
+		if (i->data <= j->data)
+		{
+			k->next = i;
+			k = k->next;
+			i = i->next;
+		}
+		else
+		{
+			k->next = j;
+			k = k->next;
+			j = j->next;
+		}
+	}
+	k->next = i ? i : j;
+}
+
+//交换两节点的位置
+void change(list& L, int tar1, int tar2)
+{
+	//找到目标各自的前一个节点
+	list t1= L;
+	list t2 = L;
+	int sign1 = 0;
+	int sign2 = 0;
+	while (sign1 < tar1 - 1)
+	{
+		sign1 += 1;
+		t1 = t1->next;
+	}
+	while (sign2 < tar2 - 1)
+	{
+		sign2 += 1;
+		t2 = t2->next;
+	}
+	//找到目标
+	list ta1 = t1->next;
+	list ta2 = t2->next;
+	//交换开始
+	//①首接②
+	t1->next = ta2;
+	//②后移
+	ta2 = ta2->next;
+	//②首接①
+	t2->next = ta1;
+	//原②接①尾
+	t1->next->next = ta1->next;
+	//①尾接后②
+	ta1->next = ta2;
+}
+
+int main()
+{
+	list L1,L2;
+	initlist(L1);
+	initlist(L2);
+	int sum1,sum2, num;
+	cin >> sum1;
+	for (int i = 1; i <= sum1; i++)
+	{
+		cin >> num;
+		creatlist(L1, num);
+	}
+	print(L1);
+	cin >> sum2;
+	for (int i = 1; i <= sum2; i++)
+	{
+		cin >> num;
+		creatlist(L2, num);
+	}
+	print(L2);
+
+	combine(L1, L2);
+	print(L1);
+
+	//试验交换两节点位置
+	int tar1, tar2;
+	cin >> tar1 >> tar2;
+	change(L1, tar1, tar2);
+	print(L1);
+	cin >> tar1 >> tar2;
+	change(L1, tar1, tar2);
+	print(L1);
+
+	//试验插入和删除操作
+	/*int choice;
+	int tar;
+	while (cin >> choice)
+	{
+		if (choice == 1)
+		{
+			cin >> tar >> num;
+			insert(L, tar, num);
+		}
+		if (choice == 2)
+		{
+			cin >> tar;
+			delet(L, tar);
+		}
+		print(L);
+	}*/
+}
