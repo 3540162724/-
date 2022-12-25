@@ -1,0 +1,103 @@
+#include<iostream>
+using namespace std;
+
+typedef struct node {
+	int xs;
+	int zs;
+	node* next;
+}*list,node;
+
+void initlist(list& L)
+{
+	L = new node;
+	L->next = NULL;
+}
+
+//给链表赋入原始数据
+void creatlist(list&L,int xs,int zs)
+{
+	list temp = new node;
+	temp->xs = xs;
+	temp->zs = zs;
+	list p = L;
+	while (p->next != NULL)
+		p = p->next;
+	p->next = temp;
+	temp->next = NULL;
+}
+
+//将两个序列按指数从小到大合并
+void link(list L1, list L2)
+{
+	list i = L1->next;
+	list j = L2->next;
+	list k = L1;
+	while (i != NULL && j != NULL)
+	{
+		if (i->zs <= j->zs)
+		{
+			k->next = i;
+			k = k->next;
+			i = i->next;
+		}
+		else
+		{
+			k->next = j;
+			k = k->next;
+			j = j->next;
+		}
+	}
+	k->next = i ? i : j;
+}
+
+//合并同类项
+void combine(list& L)
+{
+	list p = L->next;
+	while (p && p->next)
+	{
+		if (p->next->zs == p->zs)
+		{
+			p->xs += p->next->xs;
+			p->next = p->next->next;
+		}
+		p = p->next;
+	}
+}
+
+//打印
+void print(list& L)
+{
+	list p = L->next;
+	while (p)
+	{
+		cout << p->xs<<' '<<p->zs<<'\n';
+		p = p->next;
+	}
+}
+
+int main()
+{
+	list L1, L2;
+	initlist(L1);
+	initlist(L2);
+	int sum1, sum2, xs,zs;
+	cin >> sum1;
+	while (sum1--)
+	{
+		cin >> xs>>zs;
+		creatlist(L1, xs, zs);
+	}
+	print(L1);
+	cin >> sum2;
+	while (sum2--)
+	{
+		cin >> xs >> zs;
+		creatlist(L2, xs, zs);
+	}
+	print(L2);
+	link(L1, L2);
+	print(L1);
+	combine(L1);
+	print(L1);
+}
