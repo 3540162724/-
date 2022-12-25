@@ -1,0 +1,89 @@
+#include<iostream>
+using namespace std;
+#define initsize 10
+
+class zhan
+{
+public:
+	int* data;
+	int maxsize;
+	int base;
+	int top;
+	bool empty();
+	void push(int elem);
+	int pop();
+	zhan();
+	~zhan();
+
+private:
+
+};
+
+zhan::zhan()
+{
+	data = (int*)malloc(initsize * sizeof(int));
+	this->maxsize = initsize;
+	this->base = this->top = 0;
+}
+
+zhan::~zhan()
+{
+}
+
+//判断是否为空
+bool zhan::empty()
+{
+	if (this->base == this->top)
+		return true;
+	else
+		return false;
+}
+
+//插入新的元素
+void zhan::push(int elem)
+{
+	while (this->top >= this->maxsize - 1)
+	{
+		this->data = (int*)realloc(this->data, (this->maxsize+initsize)* sizeof(int));
+		this->maxsize += initsize;
+	}
+	this->data[this->top] = elem;
+	this->top += 1;
+}
+
+
+//弹出末尾的元素
+int zhan::pop()
+{
+	if (this->empty())
+		return -1;
+	else
+	{
+		this->top -= 1;
+		return this->data[this->top];
+	}
+}
+
+
+int main()
+{
+	zhan z;
+	int sum;
+	int choose,num;
+	cin >> sum;
+	//试验
+	while (sum--)
+	{
+		cin >> choose;
+		if (choose == 1)
+		{
+			cin >> num;
+			z.push(num);
+		}
+		if (choose == 2)
+		{
+			int temp = z.pop();
+			cout << temp << '\n';
+		}
+	}
+}
