@@ -6,20 +6,20 @@ typedef struct node {
 	node* next;
 }*list,node;
 
-//初始化链表
+//初始化链表，记得next要初始为null
 void initlist(list& L)
 {
 	L = new node;
 	L->next = NULL;
 }
 
-//给链表赋入原始数据
+//给链表赋入原始数据，新加的node记得给它的next接null
 void creatlist(list&L,int elem)
 {
 	list temp = new node;
 	temp->data = elem;
 	list p = L;
-	while (p->next != NULL)
+	while (p->next != NULL) //p->next好用，移位到最后一个元素
 		p = p->next;
 	p->next = temp;
 	temp->next = NULL;
@@ -30,9 +30,9 @@ void insert(list& L, int tar, int elem)
 {
 	list temp = new node;
 	temp->data = elem;
-	list p = L->next;
-	int sign = 1;
-	while (sign < tar-1)
+	list p = L; //打标记，初始在链头
+	int sign = 0;
+	while (sign < tar-1) //找到目标的上一个元素
 	{
 		sign += 1;
 		p = p->next;
@@ -44,9 +44,9 @@ void insert(list& L, int tar, int elem)
 //删除指定位置的元素
 void delet(list& L, int tar)
 {
-	list p = L;
+	list p = L;//打标记，初始在链头
 	int sign = 0;
-	while (sign < tar - 1)
+	while (sign < tar - 1)//找到目标的上一个元素
 	{
 		sign += 1;
 		p = p->next;
@@ -54,8 +54,10 @@ void delet(list& L, int tar)
 	p->next = p->next->next;
 }
 
+//打印
 void print(list& L)
 {
+	//从第一个元素开始打印
 	list p = L->next;
 	while (p != NULL)
 	{
@@ -65,8 +67,8 @@ void print(list& L)
 	cout << '\n';
 }
 
-//将两个递增序列合并
-void combine(list L1, list L2)
+//将两个递增序列合并成一个单一的递增序列
+void combine(list &L1, list &L2)
 {
 	list i = L1->next;
 	list j = L2->next;
@@ -97,12 +99,12 @@ void change(list& L, int tar1, int tar2)
 	list t2 = L;
 	int sign1 = 0;
 	int sign2 = 0;
-	while (sign1 < tar1 - 1)
+	while (sign1 < tar1 - 1)//找到目标tar1的前一点
 	{
 		sign1 += 1;
 		t1 = t1->next;
 	}
-	while (sign2 < tar2 - 1)
+	while (sign2 < tar2 - 1)//找到目标tar2的前一点
 	{
 		sign2 += 1;
 		t2 = t2->next;
