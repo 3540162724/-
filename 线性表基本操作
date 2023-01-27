@@ -9,25 +9,28 @@ typedef struct List {
 	int max_size;
 };
 
+//初始化
 void initList(List&L)
 {
-	L.data =(int*)malloc(initsize * sizeof(int));
+	L.data =(int*)malloc(initsize * sizeof(int));//记住记住（int*）malloc(initsize*sizeof(int))；
 	L.len = 0;
 	L.max_size = initsize;
 }
 
+//添加数据
 void add_elem(List& L,int elem)
 {
-	while (L.len+1 >= L.max_size)
+	while (L.len+1 == L.max_size)//当数据达到最大容量的时候就扩容，每次扩add_size个空间
 	{
-		L.data = (int*)realloc(L.data, (L.max_size+1 + add_size) * sizeof(int));
+		L.data = (int*)realloc(L.data, (L.max_size + add_size) * sizeof(int));//记住记住（int*)realloc(L.data,(L.max_mize+add_size)*sizeof(int))；
 		L.max_size += add_size;
 	}
+	//数组的下标从1开始
 	L.len += 1;
 	L.data[L.len] = elem;
-	//cout <<L.len<<":"<< L.data[L.len] << '\n';
 }
 
+//寻找目标元素
 int search(List& L, int tar)
 {
 	if (tar<1 || tar>L.len)
@@ -36,14 +39,14 @@ int search(List& L, int tar)
 		return L.data[tar];
 }
 
+//插入
 bool insert(List& L,int tar,int elem)
 {
 	if (tar<1 || tar>L.len)
 		return false;
 	else
 	{
-		//它是从0开始的位置，0-9已经占了10个位置，无＋1第10个数据输入是没有记录的
-		while (L.len+1 >= L.max_size)
+		while (L.len == L.max_size)//如果刚好满了，扩容
 		{
 			L.data = (int*)realloc(L.data, (L.max_size + add_size) * sizeof(int));
 			L.max_size += add_size;
@@ -55,6 +58,7 @@ bool insert(List& L,int tar,int elem)
 	}
 }
 
+//删除
 bool delet(List& L, int tar)
 {
 	if (tar<1 || tar>L.len)
@@ -67,6 +71,7 @@ bool delet(List& L, int tar)
 	}
 }
 
+//打印
 bool print(List& L)
 {
 	if (L.len == 0)
@@ -79,6 +84,7 @@ bool print(List& L)
 	}
 }
 
+//合并两条递增序列成一条
 void combine(List& L1, List& L2,List &L3)
 {
 	int i = 1;//L1的
@@ -87,7 +93,7 @@ void combine(List& L1, List& L2,List &L3)
 	while (i <= L1.len && j <= L2.len)
 	{
 		if (L1.data[i] <= L2.data[j])
-			L3.data[L3.len++] = L1.data[i++];
+			L3.data[L3.len++] = L1.data[i++]; //先赋值再＋1
 		else
 			L3.data[L3.len++] = L2.data[j++];
 	}
@@ -99,14 +105,15 @@ void combine(List& L1, List& L2,List &L3)
 	L3.len -= 1;
 }
 
+//左移或右移
 void move(List& L, int dis)
 {
 	dis = dis % L.len;
 	int temp[100];
-	int len = 0;
+	int len = 1;
 	//往右移动，先把最右边的位子空出来，并保存数据
 	for (int i = L.len; i > L.len - dis; i--)
-		temp[++len] = L.data[i];
+		temp[len++] = L.data[i];
 	//把剩下的从右往左分别移动
 	for (int i = L.len - dis; i >=1 ; i--)
 		L.data[i + dis] = L.data[i];
