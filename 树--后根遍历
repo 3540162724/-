@@ -1,0 +1,38 @@
+//链表，孩子表示法
+#include<iostream>
+#include<vector>
+using namespace std;
+
+typedef struct node {
+	char data;
+	vector<int> child;
+};
+
+node arr[100];
+int start, sum,num;
+
+void find(int tar)
+{
+	for (vector<int>::iterator it = arr[tar].child.begin(); it != arr[tar].child.end(); it++)
+		if (*it != -1)
+			find(*it);
+		else
+			cout << arr[tar].data;
+}
+
+int main()
+{
+	cin >> sum >> start;
+	for (int i = 0; i < sum; i++)
+	{
+		cin >> arr[i].data;
+		while (1)
+		{
+			cin >> num;
+			arr[i].child.push_back(num);
+			if (num == -1)
+				break;
+		}
+	}
+	find(start);
+}
