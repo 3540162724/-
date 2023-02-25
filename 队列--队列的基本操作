@@ -1,0 +1,82 @@
+//构造class对象
+#include<iostream>
+using namespace std;
+
+struct node {
+	int data;
+	node* next;
+};
+
+class duilie {
+public:
+	node* head;
+	duilie();
+	~duilie();
+	void push(int elem);
+	int pop();
+	bool empty();
+};
+
+duilie::duilie()
+{
+	this->head = new node;
+	this->head->next = NULL;
+}
+
+duilie::~duilie()
+{
+
+}
+
+void duilie::push(int elem)
+{
+	node* p = this->head;
+	while (p->next)
+		p = p->next;
+	node* temp = new node;
+	temp->data = elem;
+	temp->next = NULL;
+	p->next = temp;
+}
+
+int duilie::pop()
+{
+	if (!this->empty())
+	{
+		int temp = this->head->next->data;
+		this->head->next = this->head->next->next;
+		return temp;
+	}
+	return -1;
+}
+
+bool duilie::empty()
+{
+	if (this->head->next == NULL)
+		return true;
+	else
+		return false;
+}
+
+int main()
+{
+	duilie line;
+	int sum;
+	int choose;
+	int num;
+	cin >> sum;
+	while (sum--)
+	{
+		cin >> choose;
+		if (choose == 1)
+		{
+			cin >> num;
+			line.push(num);
+		}
+		if (choose == 2)
+		{
+			num = line.pop();
+			cout << num << '\n';
+		}
+	}
+}
