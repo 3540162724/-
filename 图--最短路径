@@ -1,0 +1,111 @@
+//最短路径
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct node {
+	int id;
+	int len = 0;
+	bool ifuse = false;
+	vector<int> road;
+};
+
+int init(int record[100][100],node arr[])
+{
+	int sum;
+	cin >> sum;
+	for (int i = 0; i < sum; i++)
+	{
+		for (int j = 0; j < sum; j++)
+		{
+			cin >> record[i][j];
+			if (record[i][j] == 0)
+				record[i][j] = 1008611;
+		}
+		arr[i].id = i;
+	}
+	return sum;
+}
+
+void findpath(int record[100][100],node arr[100],int sum,int point)
+{
+	arr[point].ifuse = true;
+	int min = 10086;
+	for (int i = 0; i < sum; i++)
+	{
+		if (arr[i].ifuse==false)
+		{
+			arr[i].len = record[point][i];
+			arr[i].road.push_back(point);
+			arr[i].road.push_back(i);
+		}
+	}
+	for (int i = 0; i < sum; i++)
+	{
+		if (arr[i].ifuse == false&&arr[i].len < min)
+		{
+			point = i;
+			min = arr[i].len;
+		}
+	}
+	arr[point].ifuse = true;
+
+	for (int j = 0; j < sum; j++)
+	{
+		min = 10086;//位置记得放对
+		for (int i = 0; i < sum; i++)
+		{
+			if (arr[i].ifuse == false)
+			{
+				if (arr[point].len + record[point][i] < arr[i].len)
+				{
+					arr[i].len = arr[point].len + record[point][i];
+					arr[i].road = arr[point].road;
+					arr[i].road.push_back(i);
+				}
+			}	
+		}
+		for (int i = 0; i < sum; i++)//比较这一块不能放在里面，否则point会一直变化
+		{
+			if (arr[i].ifuse==false&&arr[i].len < min)
+			{
+				point = i;
+				min = arr[i].len;
+			}
+		}
+		arr[point].ifuse = true;
+	}
+}
+
+void print(node arr[], int start, int sum)
+{
+	for (int i = 0; i < sum; i++)
+	{
+		if (i != start)
+		{
+			cout << start << "-" << i << "-" << arr[i].len;
+			cout << "----[";
+			for (vector<int>::iterator it = arr[i].road.begin(); it != arr[i].road.end(); it++)
+				cout << *it << ' ';
+			cout << "]" << '\n';
+		}
+	}
+}
+
+int main()
+{
+	int step;
+	int sum;
+	int record[100][100];
+	node arr[100];
+	cin >> step;
+	while (step)
+	{
+		int sum=init(record, arr);
+		int start;
+		cin >> start;
+		findpath(record, arr, sum, start);
+		print(arr, start, sum);
+		step--;
+	}
+}
