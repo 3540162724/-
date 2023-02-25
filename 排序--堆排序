@@ -1,0 +1,61 @@
+堆排序
+#include<iostream>
+using namespace std;
+
+void adjust(int arr[], int len, int start, int end)
+{
+	int temp = arr[start];//先记录头部
+	for (int i = start * 2; i <= end; i *= 2)
+	{
+		//沿着小的值往下走
+		if (i < end && arr[i] > arr[i + 1])
+			i++;
+		//自己属于小的，不用往下了，往下的都大于自己了
+		if (temp <= arr[i])
+			break;
+		//动态移位置
+		arr[start] = arr[i];
+		start = i;
+	}
+	arr[start] = temp;
+}
+
+void firstadjust(int arr[], int len)
+{
+	for (int i = len / 2; i >= 1; i--)
+		adjust(arr, len, i, len);
+	cout << len << ' ';
+	for (int k = 1; k <= len; k++)
+	{
+		if (k == len)
+			cout << arr[k] << '\n';
+		else
+			cout << arr[k] << ' ';
+	}
+	for (int j = len; j > 1; j--)
+	{
+		int temp = arr[1];
+		arr[1] = arr[j];
+		arr[j] = temp;
+		adjust(arr, len, 1, j - 1);
+		cout << len << ' ';
+		for (int k = 1; k <= len; k++)
+		{
+			if (k == len && j != 2)
+				cout << arr[k] << '\n';
+			else
+				cout << arr[k] << ' ';
+		}
+	}
+}
+
+
+int main()
+{
+	int arr[1000];
+	int len;
+	cin >> len;
+	for (int i = 1; i <= len; i++)
+		cin >> arr[i];
+	firstadjust(arr, len);
+}
