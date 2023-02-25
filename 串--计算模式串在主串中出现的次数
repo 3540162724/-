@@ -1,0 +1,84 @@
+
+#include<iostream>
+#include<string>
+using namespace std;
+
+
+//算模式串next[]
+void find_next(string arr,int nextone[])
+{
+	//next串
+	int i = 1;
+	nextone[1] = 0;
+	//字符串
+	int j = 0;
+	while (i <= arr.length())
+	{
+		//因为输入的字符串是从0开始记录的，所以要减一
+		if (j == 0 || arr[i - 1] == arr[j - 1])
+		{
+			++i;
+			++j;
+			nextone[i] = j;
+		}
+		else
+			j = nextone[j];
+	}
+}
+
+//算找到的位置
+int findplace(string arr,string brr,int nextone[],int pos)
+{
+	int m = pos; //主串的起始
+	int n = 1; //模式串的起始
+	while (m <= arr.length() && n <= brr.length())
+	{
+		//输入的主串和模式串都默认从0开始
+		if (n == 0 || arr[m-1] == brr[n-1])
+		{
+			m++;
+			n++;
+		}
+		else
+			n = nextone[n];
+	}
+	if (n > brr.length()) //不可等于，不然就会出不来
+		return m - n + 1;
+	else
+		return -1;
+}
+
+int main()
+{
+	int times;
+	cin >> times;
+	while (times)
+	{
+		string arr;
+		string brr;
+		int nextone[100];
+		cin >> arr;
+		int step;
+		cin >> step;
+		for (int i = 1; i <= step; i++)
+		{
+			int pos = 1;
+			int num = 0;
+			cin >> brr;
+			find_next(brr,nextone);
+			while (pos <= arr.length())
+			{
+				int sign = findplace(arr, brr, nextone, pos);
+				if (sign > 0)
+				{
+					pos = sign + 1;
+					num += 1;
+				}
+				else
+					pos += 1;//ps:就算找不到，搜查的位置也要往前推
+			}
+			cout << brr << ":" << num << '\n';
+		}
+		times--;
+	}
+}
