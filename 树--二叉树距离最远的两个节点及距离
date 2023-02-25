@@ -1,0 +1,134 @@
+#include<iostream>
+using namespace std;
+typedef struct node {
+	char data;
+	node* lchild;
+	node* rchild;
+	char l;
+	char r;
+	int llen;
+	int rlen;
+}*tree,node;
+
+void inittree(tree& L)
+{
+	L = new node;
+	L->lchild = NULL;
+	L->rchild = NULL;
+}
+
+void createtree(tree& L)
+{
+	char d;
+	cin >> d;
+	if (d == '#')
+		L = NULL;
+	else
+	{
+		inittree(L);
+		L->data = d;
+		createtree(L->lchild);
+		createtree(L->rchild);
+	}
+}
+
+node equip(tree& L)
+{
+	if (L)
+	{
+		node l1;
+		node r1;
+		l1 = equip(L->lchild);
+		r1 = equip(L->rchild);
+
+		//左
+		if (l1.llen >= l1.rlen)
+		{
+			L->llen = l1.llen;
+			L->l = l1.l;
+		}
+		else
+		{
+			L->llen = l1.rlen;
+			L->l = l1.r;
+		}
+
+		//右
+		if (r1.llen >= r1.rlen)
+		{
+			L->rlen = r1.llen;
+			L->r = r1.l;
+		}
+		else
+		{
+			L->rlen = r1.rlen;
+			L->r = r1.r;
+		}
+
+		if (L->l == '0')
+			L->l = L->data;
+		else
+			L->llen += 1;
+
+		if (L->r == '0')
+			L->r = L->data; //如果左孩子为空的话，左边值替换成自己
+		else
+			L->rlen += 1;//如果左孩子不为空的话,记得长度加1
+
+		return *L;
+	}
+	else
+	{
+		node temp;
+		temp.l = '0';
+		temp.r = '0';
+		temp.llen = 0;
+		temp.rlen = 0;
+		return temp;
+	}
+}
+
+void print(tree&L)
+{
+	if (L)
+	{
+		cout << L->data<<' '<<L->llen + L->rlen << ":" << L->l << ' ' << L->r << '\n';
+		print(L->lchild);
+		print(L->rchild);
+	}
+}
+
+void find(tree& L,tree&sign)
+{
+	if (L)
+	{
+		if (L->llen + L->rlen >= sign->llen + sign->rlen)
+			sign = L;
+		find(L->lchild, sign);
+		find(L->rchild, sign);
+	}
+}
+
+
+int main()
+{
+	int step;
+	cin >> step;
+	while (step)
+	{
+		tree L;
+		createtree(L);
+		equip(L);
+		//print(L);
+		tree temp;
+		inittree(temp);
+		temp->llen = 0;
+		temp->rlen = 0;
+		find(L, temp);
+		if (temp->llen + temp->rlen == 0)
+			cout << "0:" << '\n';
+		else
+			cout << temp->llen + temp->rlen << ":" << temp->l << ' ' << temp->r << '\n';
+		step--;
+	}
+}
