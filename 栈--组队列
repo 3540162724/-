@@ -1,0 +1,102 @@
+#include<iostream>
+#include<queue>
+#include<vector>
+using namespace std;
+
+//分组，打标识（队列中是否有该队）
+struct group {
+	bool ifin=false;
+	vector<int> member;
+};
+
+//队列中现在存在的组，组号
+struct line {
+	queue<int> member;
+};
+
+group arr[100];
+queue<int> line1;
+line brr[100];
+int sum1;
+
+//分组
+void initgroup()
+{
+	int sum2,num;
+	cin >> sum1;
+	for (int i = 1; i <= sum1; i++)
+	{
+		cin >> sum2;
+		for (int j = 1; j <= sum2; j++)
+		{
+			cin >> num;
+			arr[i].member.push_back(num);
+		}
+	}
+}
+
+//判断即将加入的是属于哪个组的
+int judge(int tar)
+{
+	for (int i = 1; i <= sum1; i++)
+	{
+		for (vector<int>::iterator it = arr[i].member.begin(); it != arr[i].member.end(); it++)
+			if (tar == *it)
+				return i;
+	}
+	return -1;
+}
+
+//判断组是否存在队列中
+void in(int num)
+{
+	int id = judge(num);
+	if (id>0&&arr[id].ifin==true)
+		brr[id].member.push(num);
+	else
+	{
+		brr[id].member.push(num);
+		arr[id].ifin = true;
+		line1.push(id);
+	}
+}
+
+//如果队列头的那个组没有人,pop，轮到队列中的下一组，如果有，pop
+void out()
+{
+	while (!line1.empty())
+	{
+		int id = line1.front();
+		if (brr[id].member.empty())
+		{
+			line1.pop();
+			arr[id].ifin = false;
+		}
+		else
+		{
+			cout << brr[id].member.front() << ' ';
+			brr[id].member.pop();
+			break;
+		}
+	}
+}
+
+int main()
+{
+	initgroup();
+	string command;
+	int num;
+	while (1)
+	{
+		cin >> command;
+		if (command == "ENQUEUE")
+		{
+			cin >> num;
+			in(num);
+		}
+		else if (command == "DEQUEUE")
+			out();
+		else
+			break;
+	}
+}
