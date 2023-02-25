@@ -1,0 +1,107 @@
+//普利姆算法
+#include<iostream>
+using namespace std;
+
+struct node {
+	int id;
+	string name;
+	bool ifread = false;
+};
+
+struct bian {
+	string name1;
+	string name2;
+	int len;
+};
+
+int sum1,sum2;
+node arr[100];
+bian brr[100];
+string start;
+int record[100][100] = {0};
+int sign1 = -1;
+int minlen = 0;
+
+int getid(string name)
+{
+	for (int i = 0; i < sum1; i++)
+		if (name == arr[i].name)
+			return i;
+}
+
+bool ifover()
+{
+	for (int i = 0; i < sum1; i++)
+		if (arr[i].ifread == false)
+			return false;
+	return true;
+}
+
+void init()
+{
+	cin >> sum1;
+	for (int i = 0; i < sum1; i++)
+	{
+		cin >> arr[i].name;
+		arr[i].id = i;
+	}
+	cin >> sum2;
+	string name1, name2;
+	int len;
+	for (int i = 0; i < sum2; i++)
+	{
+		cin >> name1 >> name2 >> len;
+		int x = getid(name1);
+		int y = getid(name2);
+		record[x][y] = len;
+		record[y][x] = len;
+	}
+	cin >> start;
+	int tar = getid(start);
+	arr[tar].ifread = true;
+}
+
+void construct()
+{
+	while (!ifover())
+	{
+		int min = 10086;
+		int tar;
+		string tar11,tar22;
+		for (int i = 0; i < sum1; i++)
+		{
+			if (arr[i].ifread == true)
+			{
+				for (int j = 0; j < sum1; j++)
+				{
+					if (record[i][j]>0&&record[i][j] < min && arr[j].ifread == false)//ps:记得要大于0，为0路不通
+					{
+						min = record[i][j];
+						tar = j;
+						tar11 = arr[i].name;
+						tar22 = arr[j].name;
+					}
+				}
+			}
+		}
+		minlen += min;
+		arr[tar].ifread = true;
+		brr[++sign1].name1 = tar11;
+		brr[sign1].name2 = tar22;
+		brr[sign1].len = min;
+	}
+}
+
+void print()
+{
+	for (int i = 0; i <= sign1; i++)
+		cout << brr[i].name1 << ' ' << brr[i].name2 << ' ' << brr[i].len << '\n';
+}
+
+int main()
+{
+	init();
+	construct();
+	cout << minlen << '\n';
+	print();
+}
