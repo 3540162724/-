@@ -1,0 +1,62 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+
+int step,sum;
+int record[100][100];
+
+struct node {
+	int data;
+	bool ifuse = false;
+};
+
+
+void dps(int sum, int record[100][100], int tar,node arr[])//传参的时候要注意
+{
+	cout << tar << ' ';
+	arr[tar].ifuse = true;
+	for (int i = 0; i < sum; i++)
+		if (record[tar][i] == 1&&arr[i].ifuse==false)
+			dps(sum, record, i,arr);
+
+}
+
+void wps(int sum, int record[100][100], int tar, node arr[])
+{
+	queue<node> line;
+	line.push(arr[tar]);
+	arr[tar].ifuse = true;
+	while (!line.empty())
+	{
+		for (int i = 0; i < sum; i++)
+			if (record[line.front().data][i] == 1 && arr[i].ifuse == false)
+			{
+				line.push(arr[i]);
+				arr[i].ifuse = true;
+			}
+		cout << line.front().data << ' ';
+		line.pop();
+	}
+}
+
+
+int main()
+{
+	cin >> step;
+	while (step)
+	{
+		node arr[100];//ps:不能作为全局变量
+		cin >> sum;
+		for (int i = 0; i < sum; i++)
+		{
+			for (int j = 0; j < sum; j++)
+				cin >> record[i][j];
+			arr[i].data = i;
+		}
+		for(int i=0;i<sum;i++)
+			if(arr[i].ifuse==false)
+				wps(sum, record, i,arr);
+		cout << '\n';
+		step--;
+	}
+}
