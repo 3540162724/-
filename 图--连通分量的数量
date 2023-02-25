@@ -1,0 +1,90 @@
+//构建邻接表数连通分量，写题之前注意看一下格式
+#include<iostream>
+using namespace std;
+
+
+struct node {
+	string name;
+	bool ifuse = false;
+};
+
+int find(node arr[], string tar,int sum)
+{
+	for (int i = 0; i < sum; i++)
+		if (tar == arr[i].name)
+			return i;
+}
+
+int init(node arr[],int record[100][100])
+{
+	int num1,num2;
+	string name1, name2;
+	cin >> num1;
+	for (int i = 0; i < num1; i++)
+		cin >> arr[i].name;
+	cin >> num2;
+	for (int i = 1; i <= num2; i++)
+	{
+		cin >> name1 >> name2;
+		int no1 = find(arr,name1,num1);
+		int no2 = find(arr, name2, num1);
+		record[no1][no2] = 1;
+		record[no2][no1] = 1;
+	}
+	return num1;
+}
+
+
+void dps(int sum, int record[100][100], int tar,node arr[])//传参的时候要注意
+{
+	arr[tar].ifuse = true;
+	for (int i = 0; i < sum; i++)
+		if (record[tar][i] == 1&&arr[i].ifuse==false)
+			dps(sum, record, i,arr);
+
+}
+
+
+
+
+void print(int record[100][100],int sum,node arr[])
+{
+	for (int i = 0; i < sum; i++)
+		if (i != sum - 1)
+			cout << arr[i].name << ' ';
+		else
+			cout << arr[i].name << '\n';
+	for (int i = 0; i < sum; i++)
+	{
+		for (int j = 0; j < sum; j++)
+			if (j != sum - 1)
+				cout << record[i][j] << ' ';
+			else
+				cout << record[i][j] << '\n';
+	}
+}
+
+
+int main()
+{
+	int step;
+	cin >> step;
+	while (step)
+	{
+		node arr[100];
+		int record[100][100] = { 0 };
+		int sum=init(arr, record);
+		int sign = 0;
+		for (int i = 0; i < sum; i++)
+			if (arr[i].ifuse == false)
+			{
+				dps(sum, record, i, arr);
+				sign += 1;
+			}
+		print(record, sum, arr);
+		cout << sign << '\n';
+		step--;
+		if(step!=0)
+			cout << '\n';
+	}
+}
