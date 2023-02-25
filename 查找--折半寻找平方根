@@ -1,0 +1,30 @@
+//折半寻找平方根
+#include<iostream>
+#include<iomanip>
+#include<cmath>
+//ads求整数的绝对值，fabs求浮点数的绝对值
+using namespace std;
+
+double tar;//不用指针
+
+void find(double start,double end)
+{
+	double mid = (start + end) / 2;
+	if (fabs(mid * mid - tar) < 0.00001)
+		tar = mid;
+	else if (mid * mid - tar > 0)
+		find(start, mid);
+	else
+		find(mid, end);
+}
+int main()
+{
+	int step;
+	cin >> step;
+	for (int i = 1; i <= step; i++)
+	{
+		cin >> tar;
+		find(0, tar);
+		cout << fixed << setprecision(3) << tar << endl;
+	}
+}
