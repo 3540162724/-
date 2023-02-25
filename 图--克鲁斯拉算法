@@ -1,0 +1,95 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+struct bian {
+	string name1;
+	string name2;
+	int len;
+};
+
+bool cmp(bian& l1, bian& l2)
+{
+	if (l2.len > l1.len)
+		return true;
+	else
+		return false;
+}
+
+int sum1, sum2,minlen=0;
+string name[100];
+bian arr[100];
+bian brr[100];
+int sign = -1;
+int judge[100];
+
+void init()
+{
+	cin >> sum1;
+	for (int i = 0; i < sum1; i++)
+		cin >> name[i];
+	cin >> sum2;
+	for (int i = 0; i < sum2; i++)
+		cin >> arr[i].name1 >> arr[i].name2 >> arr[i].len;
+	for (int i = 0; i < sum1; i++)
+		judge[i] = i;
+
+	sort(arr, arr + sum2, cmp);//要清楚加的是多少
+}
+
+int find(string name1)
+{
+	for (int i = 0; i < sum1; i++)
+		if (name1 == name[i])      //变量名注意不要重
+			return i;
+}
+
+int judgetar(int tar)
+{
+	while (tar!= judge[tar])
+		tar = judge[tar];
+	return tar;
+}
+
+void construct()
+{
+	for (int i = 0; i < sum2; i++)
+	{
+		int tar1 = judgetar(find(arr[i].name1));
+		int tar2 = judgetar(find(arr[i].name2));
+		if (tar1 !=tar2 )
+		{
+			minlen += arr[i].len;
+			brr[++sign] = arr[i];
+			judge[tar1] = tar2;//要清楚替换的变量是啥
+		}
+	}
+}
+
+
+//打印的时候要注意看打印需求
+void print()
+{
+		for (int i = 0; i <= sign; i++)
+			if(brr[i].name1<brr[i].name2)
+				cout << brr[i].name1 << ' ' << brr[i].name2 << ' ' << brr[i].len << '\n';
+			else
+				cout << brr[i].name2 << ' ' << brr[i].name1 << ' ' << brr[i].len << '\n';
+}
+
+int main()
+{
+	init();
+	construct();
+	int sign1 = 0;
+	for (int i = 0; i < sum1; i++)
+		if (judgetar(i) == i)
+			sign1++;
+	if (sign1 == 1)
+	{
+		cout << minlen << '\n';
+		print();
+	}
+	else
+		cout << "-1" << '\n';
+}
