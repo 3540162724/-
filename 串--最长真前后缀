@@ -1,0 +1,55 @@
+#include<iostream>
+using namespace std;
+
+int find(string tar)
+{
+	int sign = 0;
+	int next[100];
+	//串
+	int i = 0;
+	//next数组
+	int j = 1;
+	next[j] = 0;
+
+	while (j <= tar.length())//ps:是由next来判断的
+	{
+		if (i == 0 || tar[i - 1] == tar[j - 1])
+		{
+			i++;
+			j++;
+			next[j] = i;
+		}
+		else
+			i = next[i];
+	}
+	for (int i = 1; i <= tar.length() + 1; i++)
+	{
+		cout << next[i] << ' ';
+		if (next[i] - 1 > sign)
+			sign = next[i] - 1;
+	}
+	cout << '\n';
+	return sign;
+}
+
+int main()
+{
+	int step;
+	cin >> step;
+	string tar;
+	while (step)
+	{
+		cin >> tar;
+		int sign=find(tar);
+		if (sign > 0)
+		{
+			cout << sign << '\n';
+			for (int i = 1; i <= sign; i++)
+				cout << tar[i - 1];
+			cout << '\n';
+		}
+		else
+			cout << "empty" << '\n';
+		step--;
+	}
+}
