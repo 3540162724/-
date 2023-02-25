@@ -1,0 +1,110 @@
+#include<iostream>
+using namespace std;
+
+typedef struct node {
+	int data;
+	node* lchild;
+	node* rchild;
+}*tree, node;
+
+
+void inittree(tree& L)
+{
+	L = new node;
+	L->lchild = NULL;
+	L->rchild = NULL;
+}
+
+void init(tree&L,int tar)
+{
+	if (L)
+	{
+		if (tar < L->data)
+			init(L->lchild, tar);
+		else
+			init(L->rchild, tar);
+	}
+	else
+	{
+		inittree(L);
+		L->data = tar;
+	}
+}
+
+void del2(tree& L)
+{
+	if (L->rchild == NULL)
+		L = L->lchild;
+	else if (L->lchild==NULL)
+		L = L->rchild;
+	else
+	{
+		tree q = L;
+		tree s = L->lchild;
+		while (s->rchild)
+		{
+			q = s;
+			s = s->rchild;
+		}
+		L->data = s->data;
+		if (q != L)//需要分两种情况考虑
+			q->rchild = s->lchild;
+		else
+			q->lchild = s->lchild;
+	}
+
+}
+
+void del1(tree& L, int tar)
+{
+	if (L)
+	{
+		if (L->data == tar)
+			del2(L);
+		else if (L->data > tar)
+			del1(L->lchild, tar);
+		else
+			del1(L->rchild, tar);
+	}
+}
+
+void print(tree& L)
+{
+	if (L)
+	{
+		print(L->lchild);
+		cout << L->data<<' ';
+		print(L->rchild);
+	}
+}
+
+int main()
+{
+	int step;
+	int sum1,num,sum2;
+	cin >> step;
+	while (step)
+	{
+		tree L;
+		inittree(L);
+		L->data = 1008611;
+		cin >> sum1;
+		for (int i = 1; i <= sum1; i++)
+		{
+			cin >> num;
+			init(L,num);
+		}
+		print(L->lchild);
+		cout << '\n';
+		cin >> sum2;
+		for (int i = 1; i <= sum2; i++)
+		{
+			cin >> num;
+			del1(L, num);
+			print(L->lchild);
+			cout << '\n';
+		}
+		step--;
+	}
+
+}
