@@ -1,0 +1,66 @@
+#include<iostream>
+using namespace std;
+
+
+void findnext(string tar, int next[])
+{
+	//串
+	int i = 0;
+	//next数组
+	int j = 1;
+	next[j] = 0;
+
+	while (j <= tar.length())
+	{
+		if (i == 0 || tar[i - 1] == tar[j - 1])
+		{
+			i++; j++;
+			next[j] = i;
+		}
+		else
+			i = next[i];
+	}
+
+	for (int j = 1; j <= tar.length(); j++)
+		cout << next[j]-1 << ' ';
+	cout << '\n';
+}
+
+int ifin(string tar1,string tar2,int next[])
+{
+	//主串
+	int i = 1;
+	//模式串
+	int j = 1;
+
+	while (i <= tar1.length() && j <= tar2.length())
+	{
+		if (j == 0 || tar1[i - 1] == tar2[j - 1])
+		{
+			i++; j++;
+		}
+		else
+			j = next[j];	
+	}
+	if (j > tar2.length())
+		return i - j + 1;
+	else
+		return 0;
+}
+
+
+int main()
+{
+	int step;
+	cin >> step;
+	string tar1, tar2;
+	int next[100];
+	for (int i = 1; i <= step; i++)
+	{
+		cin >> tar1;
+		cin >> tar2;
+		findnext(tar2, next);
+		int sign = ifin(tar1, tar2, next);
+		cout << sign << '\n';
+	}
+}
