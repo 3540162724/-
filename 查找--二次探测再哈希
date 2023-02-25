@@ -1,0 +1,126 @@
+#include<iostream>
+using namespace std;
+
+int main()
+{
+	int step;
+	int size, sum;
+	cin >> step;
+	for (int i = 1; i <= step; i++)
+	{
+		int arr[100];
+		int num;
+		cin >> size >> sum;
+		for (int k = 0; k <= size; k++)
+			arr[k] = -1;
+		for (int j = 1; j <= sum; j++)
+		{
+			cin >> num;
+			int posi = num % 11;
+			if (arr[posi] == -1)
+				arr[posi] = num;
+			else
+			{
+				int temp = 1;
+				int sign2 = 0;
+				do {
+					int temp1 = temp * temp;
+					int place1 = (posi + temp1) % size;
+					int place2 = posi - temp1;
+					if (place2 < 0)
+						place2 = size + place2;
+					if (arr[place1] == -1)
+					{
+						arr[place1] = num;
+						sign2 = 1;
+					}
+					else if (arr[place2] == -1 && sign2 == 0)
+					{
+						arr[place2] = num;
+						sign2 = 1;
+					}
+					temp++;
+				} while (sign2 == 0);
+
+			}
+		}
+		for (int p = 0; p < size; p++)
+		{
+			if (arr[p] == -1)
+			{
+				if (p == size - 1)
+				{
+					cout << "NULL" << '\n';
+				}
+				else
+					cout << "NULL" << ' ';
+			}
+			else
+			{
+				if (p == size - 1)
+				{
+					cout << arr[p] << '\n';
+				}
+				else
+					cout << arr[p] << ' ';
+			}
+		}
+
+
+		int search;
+		int tar;
+		cin >> search;
+		for (int m = 1; m <= search; m++)
+		{
+			int flag = 0;
+			int temp = 1;
+			int sign1 = 1;
+			cin >> tar;
+			int posi = tar % 11;
+			if (arr[posi] != tar)
+			{
+				do {
+					sign1 += 2;//记录步数
+					int temp1 = temp * temp;
+					int place1 = (posi + temp1) % size;
+					int place2 = posi - temp1;
+					if (place2 < 0)
+						place2 = size + place2;
+					/*if (arr[place1] == -1 || arr[place2] == -1 || place1 >= size || place2 >= size)
+						break;---是错误的*/
+					if (arr[place1] == -1)
+					{
+						sign1 -= 1;
+						break;
+					}
+					else if (arr[place1] == tar)
+					{
+						sign1 -= 1;//查到一次就成功
+						flag = 1;
+						posi = place1;
+					}
+					else if(arr[place2] == -1)
+						break;
+					else if (arr[place2] == tar)
+					{
+						flag = 1;
+						posi = place2;
+					}
+					temp++;
+				} while (flag == 0);
+			}
+			else
+			{
+				flag = 1;
+			}
+			if (flag == 0)
+				cout << "0" << ' ' << sign1 << '\n';
+			else
+			{
+				posi += 1;
+				cout << "1" << ' ' << sign1 << ' ' << posi << '\n';
+			}
+
+		}
+	}
+}
