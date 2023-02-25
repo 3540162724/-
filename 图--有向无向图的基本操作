@@ -1,0 +1,118 @@
+//构建有向无向邻接表，数各种度
+#include<iostream>
+using namespace std;
+
+
+struct node {
+	string name;
+	int out=0;
+	int in=0;
+	int sum=0;
+};
+
+int find(node arr[], string tar,int sum)
+{
+	for (int i = 0; i < sum; i++)
+		if (tar == arr[i].name)
+			return i;
+}
+
+int initD(node arr[],int record[100][100])
+{
+	int num1,num2;
+	string name1, name2;
+	cin >> num1;
+	for (int i = 0; i < num1; i++)
+		cin >> arr[i].name;
+	cin >> num2;
+	for (int i = 1; i <= num2; i++)
+	{
+		cin >> name1 >> name2;
+		int no1 = find(arr,name1,num1);
+		int no2 = find(arr, name2, num1);
+		record[no1][no2] = 1;
+		arr[no1].out += 1;
+		arr[no2].in += 1;
+		arr[no1].sum += 1;
+		arr[no2].sum += 1;
+	}
+	return num1;
+}
+
+int initU(node arr[], int record[100][100])
+{
+	int num1, num2;
+	string name1, name2;
+	cin >> num1;
+	for (int i = 0; i < num1; i++)
+		cin >> arr[i].name;
+	cin >> num2;
+	for (int i = 1; i <= num2; i++)
+	{
+		cin >> name1 >> name2;
+		int no1 = find(arr, name1, num1);
+		int no2 = find(arr, name2, num1);
+		record[no1][no2] = 1;
+		record[no2][no1] = 1;
+		arr[no1].sum += 1;
+		arr[no2].sum += 1;
+	}
+	return num1;
+}
+
+void print1(int record[100][100],int sum)
+{
+	for (int i = 0; i < sum; i++)
+	{
+		for (int j = 0; j < sum; j++)
+			cout << record[i][j] << ' ';
+		cout << '\n';
+	}
+}
+
+void print2(node arr[], char type, int sum)
+{
+	if (type == 'D')
+	{
+		for (int i = 0; i < sum; i++)
+			if (arr[i].sum != 0)
+				cout << arr[i].name << ":" <<' ' << arr[i].out << ' ' << arr[i].in << ' ' << arr[i].sum << '\n';
+			else
+				cout << arr[i].name << '\n';
+	}
+	else
+	{
+		for (int i = 0; i < sum; i++)
+			if (arr[i].sum != 0)
+				cout << arr[i].name << ":" <<' '<< arr[i].sum << '\n';
+			else
+				cout << arr[i].name << '\n';
+	}
+}
+
+int main()
+{
+	int step,num1,num2;
+	char command;
+	string name1, name2;
+	cin >> step;
+	while (step)
+	{
+		cin >> command;
+		node arr[100];
+		int record[100][100] = { 0 };
+		if (command == 'D')
+		{
+			int sum=initD(arr, record);
+			print1(record, sum);
+			print2(arr, command, sum);
+		}
+		else
+		{
+			int sum = initU(arr, record);
+			print1(record, sum);
+			print2(arr, command, sum);
+		}
+		step--;
+	}
+}
