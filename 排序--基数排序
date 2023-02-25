@@ -1,0 +1,90 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+struct {
+	vector<int>brr;
+}record[10];
+
+void jsort(int temp[], int sum)
+{
+	int sign;
+	int step = 0;
+	int min = temp[1];
+	int max = temp[1];
+	for (int i = 1; i <= sum; i++)
+		if (temp[i] < min)
+			min = temp[i];
+	if (min < 0)
+	{
+		sign = (-1) * min;
+		for (int i = 1; i <= sum; i++)
+			temp[i] += sign;
+	}
+	for (int i = 1; i <= sum; i++)
+		if (temp[i] > max)
+			max = temp[i];
+	while (max > 0)
+	{
+		step++;
+		max = max / 10;
+	}
+
+
+	for (int k = 1; k <= step; k++)
+	{
+		for (int i = 1; i <= sum; i++)
+		{
+			int tar = temp[i];
+			for (int p = 1; p < k; p++)
+				tar = tar / 10;
+			tar = tar % 10;
+			record[tar].brr.push_back(temp[i]);
+		}
+		int signal1 = 0;
+		for (int t = 0; t <= 9; t++)
+		{
+			bool signal2 = false;
+			cout << t << ":";
+			for (vector<int>::iterator it = record[t].brr.begin(); it != record[t].brr.end(); it++)
+			{
+				signal2 = true;
+				signal1++;
+				temp[signal1] = *it;
+				cout << "->" << *it;
+			}
+			if (signal2 == false)
+				cout << "NULL" << '\n';
+			else
+				cout << "->^" << '\n';
+		}
+		for (int w = 1; w <= sum; w++)
+			if (w != sum)
+				cout << temp[w] << ' ';
+			else
+				cout << temp[w] << '\n';
+		for (int t = 0; t <= 9; t++)
+		{
+			record[t].brr.clear();
+		}
+	}
+
+
+}
+
+int main()
+{
+	int q;
+	int sum;
+	int temp[100];
+	cin >> q;
+	for (int i = 1; i <= q; i++)
+	{
+		cin >> sum;
+		for (int j = 1; j <= sum; j++)
+			cin >> temp[j];
+		jsort(temp, sum);
+		cout << '\n';
+	}
+
+}
