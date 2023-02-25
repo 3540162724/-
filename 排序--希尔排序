@@ -1,0 +1,76 @@
+//希尔排序
+#include<iostream>
+using namespace std;
+
+
+void shell2(int arr[], int gap,int sum)
+{
+	for (int i = gap; i <= sum; i++)
+	{
+		int tmp = arr[i];
+		int j = i - gap;
+		for (; j >= 1; j -= gap)
+		{
+			if (arr[j] > tmp)
+				arr[j + gap] = arr[j];
+			else
+				break;
+		}
+		arr[j + gap] = tmp;
+	}
+
+	for (int i = 1; i <= sum; i++)
+		cout << arr[i] << ' ';
+	cout << '\n';
+}
+
+void shell3(int arr[], int gap, int sum)
+{
+	for (int i = gap; i <= sum; i++)
+	{
+		int tmp = arr[i];
+		int j = i - gap;
+		for (; j >= 1; j -= gap)
+		{
+			if (arr[j] < tmp)
+				arr[j + gap] = arr[j];
+			else
+				break;
+		}
+		arr[j + gap] = tmp;
+	}
+
+	for (int i = 1; i <= sum; i++)
+		if(i==sum)
+			cout << arr[i] << '\n';
+		else
+			cout << arr[i] << ' ';
+}
+
+void shell1(int arr[], int sum)
+{
+	int gap = sum;
+	while (gap > 1)
+	{
+		gap = gap / 2;
+		shell3(arr, gap, sum);
+	}
+}
+
+
+int main()
+{
+	int step;
+	int sum, num;
+	int arr[100];
+	cin >> step;
+	while (step)
+	{
+		cin >> sum;
+		for (int i = 1; i <= sum; i++)
+			cin >> arr[i];
+		shell1(arr, sum);
+		cout << '\n';
+		step--;
+	}
+}
