@@ -1,0 +1,81 @@
+二路并归
+#include<iostream>
+using namespace std;
+void mergesort(string arr[], int low, int mid, int high)
+{
+	int i = low;
+	int j = mid + 1;
+	int k = 0;
+	string temp[100];
+	while (i <= mid && j <= high)
+	{
+		if (arr[i] >= arr[j])
+			temp[k++] = arr[i++];
+		else
+			temp[k++] = arr[j++];
+	}
+	while (i <= mid)
+		temp[k++] = arr[i++];
+	while (j <= high)
+		temp[k++] = arr[j++];
+	k = 0;
+	for (int h = low; h <= high; h++)
+		arr[h] = temp[k++];
+
+
+}
+
+void msort(string arr[], int low, int high, int sum)
+{
+	int step = 0;
+	int dis = 2;
+	int sum1 = sum;
+	while (sum1 > 0)
+	{
+		step++;
+		sum1 = sum1 / 2;
+	}
+	while (step > 0)
+	{
+		int k = 1;
+		while (k <= sum)
+		{
+			int begin = k;
+			int end = k + dis - 1;
+			int mid = (begin + end) / 2;
+			if (end <= sum)
+				mergesort(arr, begin, mid, end);
+			else
+			{
+				mid = begin + dis / 2 - 1;
+				mergesort(arr, begin, mid, sum);
+				break;
+			}
+			k = k + dis;
+		}
+		for (int m = 1; m <= sum; m++)
+			if (m != sum)
+				cout << arr[m] << ' ';
+			else
+				cout << arr[m] << '\n';
+		step--;
+		dis = dis * 2;
+	}
+
+}
+
+int main()
+{
+	int step;
+	int sum;
+	cin >> step;
+	for (int i = 1; i <= step; i++)
+	{
+		string arr[1000];
+		cin >> sum;
+		for (int j = 1; j <= sum; j++)
+			cin >> arr[j];
+		msort(arr, 1, sum, sum);
+		cout << '\n';
+	}
+}
