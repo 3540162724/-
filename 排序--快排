@@ -1,0 +1,68 @@
+#include<iostream>
+using namespace std;
+
+
+void quicksort(int begin, int end, int arr[],int sum)
+{
+	int po = arr[begin];
+	int left = begin;
+	int right = end;
+	while (begin < end)
+	{
+		while (arr[end] >= po && begin < end)//大于等于
+			end--;
+		if (begin < end)
+		{
+			arr[begin] = arr[end];
+			begin++;
+		}
+		while (arr[begin] < po && begin < end)
+			begin++;
+		if (begin < end)
+		{
+			arr[end] = arr[begin];
+			end--;
+		}
+	}
+	arr[begin] = po;
+
+		for (int m = 1; m <= sum; m++)
+	{
+		if (m == sum)
+			cout << arr[m] << '\n';
+		else
+			cout << arr[m] << ' ';
+	}
+
+	if (begin - left > 1)
+		quicksort(left, begin, arr, sum);
+	if (right-end-1 >1 )
+		quicksort(end + 1, right, arr, sum);
+
+	
+}
+
+int main()
+{
+	int step;
+	cin >> step;
+	int sum;
+	int arr[100];
+	while (step)
+	{
+		cin >> sum;
+		for (int i = 1; i <= sum; i++)
+			cin >> arr[i];
+		quicksort(1, sum, arr, sum);
+		//随后需要再输出一次
+		for (int m = 1; m <= sum; m++)
+	{
+
+		if (m == sum)
+			cout << arr[m] << '\n';
+		else
+			cout << arr[m] << ' ';
+	}
+		step--;
+	}
+}
