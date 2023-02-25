@@ -1,0 +1,103 @@
+//ps:看对题目是非常重要的一件事
+#include<iostream>
+using namespace std;
+
+#define initsize 100
+#define addsize 100
+
+struct list {
+	int* data;
+	int len;
+	int maxlen;
+	int record;
+};
+
+void init(list& L)
+{
+	L.data = (int*)malloc(initsize * sizeof(int));
+	L.len = 0;
+	L.record = 0;
+	L.maxlen = initsize;
+}
+
+void create(list& L,int elem)
+{
+	while (L.len + 1 == L.maxlen)
+	{
+		L.data = (int*)realloc(L.data, (L.maxlen + addsize) * sizeof(int));
+		L.maxlen += addsize;
+	}
+	L.data[++L.len] = elem;
+}
+
+void find1(list& L)
+{
+	int sign1 = 0;
+	int sign4;
+	for (int i = 1; i <= L.len; i++)
+	{
+		int sign2 = i;
+		int sign3 = 1;
+		for (int j = i + 1; j <= L.len; j++)
+		{
+			if (L.data[j] > sign2)
+			{
+				sign3 += 1;
+				sign2 = L.data[j];
+			}
+		}
+		if (sign3 > sign1)
+		{
+			sign1 = sign3;
+			sign4 = i;
+		}
+	}
+	for (int i = sign4; i <= L.len; i++)
+		if (L.data[i] > sign4)
+		{
+			cout << L.data[i]<<' ';
+			sign4 = L.data[i];
+		}
+}
+
+void find(list& L)
+{
+	int sign1;
+	int sign2 = 0;
+	for (int i = 1; i <= L.len; i++)
+	{
+		int sign3 = 0;
+		for (int j = i+1; j <= L.len; j++)
+		{
+			if (L.data[j] > L.data[j - 1])
+				sign3 += 1;
+			else
+				break;
+		}
+		if (sign3 > sign2)
+		{
+			sign1 = i;
+			sign2 = sign3;
+		}
+	}
+	for (int j = sign1; j <= sign1 + sign2; j++)
+		if (j < sign1 + sign2)
+			cout << L.data[j] << ' ';
+		else
+			cout << L.data[j] << '\n';
+}
+
+
+int main()
+{
+	int sum,num;
+	cin >> sum;
+	list L;
+	init(L);
+	for (int i = 1; i <= sum; i++)
+	{
+		cin >> num;
+		create(L, num);
+	}
+	find(L);
+}
