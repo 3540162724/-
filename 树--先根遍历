@@ -1,0 +1,34 @@
+//数组父亲表示法
+#include<iostream>
+using namespace std;
+
+void find(int record[], int tar,int sum,char name[])
+{
+	for(int i=0;i<sum;i++)
+		if (record[i] == tar)
+		{
+			cout << name[i];
+			find(record, i, sum,name);
+		}
+}
+
+
+int main()
+{
+	int step;
+	int sum;
+	char name[100];
+	int record[100];
+	cin >> step;
+	while (step)
+	{
+		cin >> sum;
+		for (int i = 0; i < sum; i++)
+			cin >> name[i];
+		for (int i = 0; i < sum; i++)
+			cin >> record[i];
+		find(record, -1, sum,name);
+		cout << '\n';
+		step--;
+	}
+}
