@@ -1,0 +1,80 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+typedef struct node {
+	int data;
+	node* lchild;
+	node* rchild;
+}*tree,node;
+
+void inittree(tree& L)
+{
+	L = new node;
+	L->lchild = NULL;
+	L->rchild = NULL;
+}
+
+vector<tree> record;
+int sum,num;
+
+bool compare(tree& L1, tree& L2)
+{
+	return L1->data <= L2->data;
+}
+
+
+tree createtree()
+{
+	while (!record.empty())
+	{
+		tree temp;
+		inittree(temp);
+		temp->data = (*record.begin())->data + (*(record.begin() + 1))->data;
+		temp->lchild = *record.begin();
+		temp->rchild = *(record.begin() + 1);
+		record.erase(record.begin());
+		record.erase(record.begin());
+		record.push_back(temp);
+		sort(record.begin(), record.end(), compare);
+		if(record.empty())
+			return temp;
+	}
+	
+}
+
+void print(tree&L,string s)
+{
+	if (L)
+	{
+		if (L->lchild == NULL && L->rchild == NULL)
+			cout << s;
+		else
+		{
+			print(L->lchild, s + '0');
+			print(L->rchild, s + '1');
+		}
+	}
+}
+
+int main()
+{
+	cin >> sum;
+	while (sum)
+	{
+		cin >> num;
+		tree temp;
+		inittree(temp);
+		temp->data = num;
+		record.push_back(temp);
+		sum--;
+	}
+	sort(record.begin(), record.begin() + sum, compare);
+	for(vector<int>::iterator it=record.begin();it!=)
+
+	string s = "";
+	tree L = createtree();
+	print(L, s);
+
+}
